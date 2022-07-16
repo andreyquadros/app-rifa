@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "621354051684",
+    "project_id": "app-rifa-quanyx",
+    "storage_bucket": "app-rifa-quanyx.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621354051684:android:ad13b3fb12769451099771",
+        "android_client_info": {
+          "package_name": "br.com.quanyx.rifa.rifa_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "621354051684-2tlv5og33mvn9ptadpa6sd0bq01fdmsd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRw3zIVtNQ5sg9aHuxtTfRlrfkACEF3KQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "621354051684-2tlv5og33mvn9ptadpa6sd0bq01fdmsd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
