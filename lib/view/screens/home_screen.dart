@@ -20,8 +20,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   TabStyle _tabStyle = TabStyle.reactCircle;
-  VendedoresMock _vendedoresMock = VendedoresMock.Andrey;
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Column(
           children: [
-            _buildVendorSelector(),
             const Divider(),
             const Expanded(
               child: TabBarView(
@@ -61,24 +61,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildVendorSelector() {
-    final dropdown = DropdownButton<VendedoresMock>(
-      value: _vendedoresMock,
-      onChanged: (novoVendedor) {
-        if (novoVendedor != null) setState(() => _vendedoresMock = novoVendedor);
-      },
-      items: [
-        for (final vendedor in VendedoresMock.values)
-          DropdownMenuItem(
-            value: vendedor,
-            child: Text(vendedor.toString()),
-          )
-      ],
-    );
-    return ListTile(
-      contentPadding: const EdgeInsets.all(8),
-      title: const Text('Vendedor(a) :'),
-      trailing: dropdown,
-    );
-  }
+
 }

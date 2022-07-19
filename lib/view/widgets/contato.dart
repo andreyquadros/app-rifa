@@ -1,8 +1,23 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ContatoWidget extends StatelessWidget {
+class ContatoWidget extends StatefulWidget {
   const ContatoWidget({Key? key}) : super(key: key);
+
+  @override
+  State<ContatoWidget> createState() => _ContatoWidgetState();
+}
+
+class _ContatoWidgetState extends State<ContatoWidget> {
+
+  final Uri _url = Uri.parse('https://www.instagram.com/quanyx.softhouse');
+
+  Future<void> _abrirURL() async {
+    if (!await launchUrl(_url)) {
+      throw 'Não pode inicializar $_url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +43,7 @@ class ContatoWidget extends StatelessWidget {
               ),
             ),
             ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: _abrirURL,
                 icon: Icon(Icons.more_horiz_outlined),
                 label: Text('Saiba mais'))
           ],
