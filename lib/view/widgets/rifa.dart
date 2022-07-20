@@ -1,23 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rifa_flutter/model/VendedoresMock.dart';
 import 'package:rifa_flutter/model/class/Comprador.dart';
 import 'dart:io';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:rifa_flutter/view/screens/webview_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:whatsapp_share2/whatsapp_share2.dart';
-
 import 'package:pdf/widgets.dart' as pw;
-
 import '../../firebase_options.dart';
-import '../../view_model/ScreenArguments.dart';
+
 
 enum Share {
   whatsapp,
@@ -28,8 +21,6 @@ enum Share {
 class RifaWidget extends StatefulWidget {
   const RifaWidget({Key? key}) : super(key: key);
 
-
-
   @override
   State<RifaWidget> createState() => _RifaWidgetState();
 }
@@ -37,20 +28,9 @@ class RifaWidget extends StatefulWidget {
 class _RifaWidgetState extends State<RifaWidget> {
   @override
 
-  // Future<void> _abrirURL(String telefone) async {
-  //   print('O telefone é: ${telefone}');
-  //   final Uri _url = Uri.parse('https://wa.me/+5569${telefone}');
-  //   print(_url);
-  //
-  //   if (!await launchUrl(_url)) {
-  //     throw 'Não pode inicializar $_url';
-  //   }
-  // }
-
   String? _nome;
   String? _telefone;
   String? _endereco;
-  //int? n_rifa;
 
   VendedoresMock _vendedoresMock = VendedoresMock.SALA_3A_AGRO;
   String vendedorFinal = 'SALA_3A_AGRO';
@@ -59,22 +39,29 @@ class _RifaWidgetState extends State<RifaWidget> {
   TextEditingController _telefoneController = TextEditingController();
   TextEditingController _enderecoController = TextEditingController();
 
-
   void _limparControladores(){
     _nomeController.clear();
     _telefoneController.clear();
     _enderecoController.clear();
   }
 
-
-
   String? _validarNome(String? value) {
     if (value?.isEmpty ?? false) {
-      return 'O nome é obrigatório.';
+
+      const snackBar = SnackBar(
+        content: Text('Por favor preencha o campo Nome e Telefone, eles são obrigatórios!'),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
     }
     final RegExp nameExp = RegExp(r'^[A-Za-z ]+$');
     if (!nameExp.hasMatch(value!)) {
-      return 'Por favor utilize apenas letras do alfabeto, sem caracteres especiais.';
+      const snackBar = SnackBar(
+        content: Text('Utilize apenas letras do alfabeto, sem caracteres especiais e também não deixe vazio!'),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
     return null;
   }
@@ -84,8 +71,6 @@ class _RifaWidgetState extends State<RifaWidget> {
     String _nomeC  = _nomeController.text;
     String _telefoneC = _telefoneController.text;
     String _enderecoC = _enderecoController.text;
-
-
 
     Comprador _comprador = Comprador(nome:_nomeC, telefone: _telefoneC, endereco: _enderecoC, vendedor: vendedorFinal );
     await db.collection("compradores").add(_comprador.toMap()).then((DocumentReference doc) {
@@ -119,13 +104,7 @@ class _RifaWidgetState extends State<RifaWidget> {
       ),
     ];
     }));
-    // pdf.addPage(
-    //   pw.Page(
-    //     build: (pw.Context context) => pw.Center(
-    //       child: pw.Text('PDF GERADO DOC = ${doc}', style: pw.TextStyle(font: ttf) ),
-    //     ),
-    //   ),
-    // );
+
       final output = await getExternalStorageDirectory();
       final file = File('${output?.path}/rifa-${doc}.pdf');
       await file.writeAsBytes(await pdf.save());
@@ -139,60 +118,6 @@ class _RifaWidgetState extends State<RifaWidget> {
     _limparControladores();
 
   }
-  // Future<void> enviarWhatsApp(Share share) async {
-  //   String msg =
-  //       'Flutter share is great!!\n Check out full example at https://pub.dev/packages/flutter_share_me';
-  //   String url = 'https://pub.dev/packages/flutter_share_me';
-  //   String? response;
-  //   final FlutterShareMe flutterShareMe = FlutterShareMe();
-  //   switch (share) {
-  //     case Share.whatsapp_business:
-  //       response = await flutterShareMe.shareToWhatsApp4Biz(
-  //           msg: msg);
-  //       break;
-  //     case Share.whatsapp_personal:
-  //       await _abrirURL(_telefoneController.text);
-  //       break;
-  //
-  //   }
-  //
-  //
-  // }
-
-  // Future<void> enviarWhatsApp(File file, Directory output, String telefone) async {
-  //
-  //   Future<void> isInstalled() async {
-  //     final val = await WhatsappShare.isInstalled(
-  //         package: Package.businessWhatsapp
-  //     );
-  //
-  //     print('Whatsapp está instalado: $val');
-  //     await WhatsappShare.shareFile(
-  //       phone: telefone,
-  //       filePath: [file.toString()],
-  //     );
-  //   }
-  //   await isInstalled();
-  //
-  // }
-
-  // Future<void> lerPDF(String doc) async {
-  //   try {
-  //     final directory = await getExternalStorageDirectory();
-  //     final file = File('${directory!.path}/rifa-${doc}.pdf');
-  //     print('cosneguiu ler');
-  //   } catch (e) {
-  //     print('não leu');
-  //   }
-  // }
-
-
-  // @override
-  // void dispose(){
-  //   _nomeController.dispose();
-  //   _telefoneController.dispose();
-  //   _enderecoController.dispose();
-  // }
 
   @override
   void initState(){
@@ -287,6 +212,8 @@ class _RifaWidgetState extends State<RifaWidget> {
                           fontSize: 22,
                           fontWeight: FontWeight.bold)),
                   onPressed: () async {
+                    _validarNome(_nomeController.text);
+                    if (_telefoneController.text.isNotEmpty)
                     _launchWhatsapp(_telefoneController.text, _nomeController.text);
                     },
                     icon: Icon(Icons.whatsapp),
@@ -299,7 +226,10 @@ class _RifaWidgetState extends State<RifaWidget> {
                       textStyle: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold)),
-                  onPressed: (){ _salvarFirebase();},
+                  onPressed: (){
+                    _validarNome(_nomeController.text);
+                    if (_nomeController.text.isNotEmpty)
+                    _salvarFirebase();},
                   icon: Icon(Icons.sell),
                   label: Text('Gerar Rifa',)),
               const SizedBox(height: 40.0),

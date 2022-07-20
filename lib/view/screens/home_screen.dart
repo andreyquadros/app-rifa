@@ -1,6 +1,5 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:rifa_flutter/model/VendedoresMock.dart';
 import 'package:rifa_flutter/view/widgets/contato.dart';
 import 'package:rifa_flutter/view/widgets/intro.dart';
 import 'package:rifa_flutter/view/widgets/rifa.dart';
@@ -10,7 +9,6 @@ const _kPages = <String, IconData >{
   'Rifa': Icons.add_shopping_cart,
   'Contato': Icons.contact_page_rounded,
 };
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   TabStyle _tabStyle = TabStyle.reactCircle;
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +57,5 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
 }

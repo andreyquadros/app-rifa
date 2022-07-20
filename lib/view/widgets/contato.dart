@@ -30,8 +30,6 @@ class _ContatoWidgetState extends State<ContatoWidget> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

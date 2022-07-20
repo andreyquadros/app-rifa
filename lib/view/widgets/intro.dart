@@ -21,7 +21,6 @@ class IntroWidget extends StatelessWidget {
               '''seguindo INSTRUÇÃO NORMATIVA Nº 1, DE 15 DE DEZEMBRO DE 2020, que orienta sobre a não utilização de papel, desenvolveu esse Aplicativo com o intuito'''
               ''' de atender a demanda de venda de Rifas para a Festa Junina da Instituição, com o objetivo de ZERAR o uso de papel impresso. ''',
 
-
               style: TextStyle(fontSize: 22),
               textAlign: TextAlign.justify,
               minFontSize: 18,
