@@ -35,9 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text("App Rifa - IFRO"),
         ),
         body: Column(
-          children: [
-            const Divider(),
-            const Expanded(
+          children: const [
+            Divider(),
+            Expanded(
               child: TabBarView(
                 children: [
                   IntroWidget(),

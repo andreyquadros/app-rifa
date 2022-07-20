@@ -11,6 +11,17 @@ class ContatoWidget extends StatefulWidget {
 
 class _ContatoWidgetState extends State<ContatoWidget> {
 
+  Future<void> _launchInWebViewWithoutJavaScript(Uri url) async {
+
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(enableJavaScript: false),
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
   final Uri _url = Uri.parse('https://www.instagram.com/quanyx.softhouse');
 
   Future<void> _abrirURL() async {
@@ -18,6 +29,8 @@ class _ContatoWidgetState extends State<ContatoWidget> {
       throw 'Não pode inicializar $_url';
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +58,8 @@ class _ContatoWidgetState extends State<ContatoWidget> {
             ElevatedButton.icon(
                 onPressed: _abrirURL,
                 icon: Icon(Icons.more_horiz_outlined),
-                label: Text('Saiba mais'))
+                label: Text('Saiba mais')),
+
           ],
         ),
       ),

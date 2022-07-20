@@ -3,19 +3,32 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rifa_flutter/model/VendedoresMock.dart';
 import 'package:rifa_flutter/model/class/Comprador.dart';
 import 'dart:io';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rifa_flutter/view/screens/webview_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
 
 import 'package:pdf/widgets.dart' as pw;
 
 import '../../firebase_options.dart';
+import '../../view_model/ScreenArguments.dart';
+
+enum Share {
+  whatsapp,
+  whatsapp_personal,
+  whatsapp_business,
+}
 
 class RifaWidget extends StatefulWidget {
   const RifaWidget({Key? key}) : super(key: key);
+
+
 
   @override
   State<RifaWidget> createState() => _RifaWidgetState();
@@ -23,6 +36,16 @@ class RifaWidget extends StatefulWidget {
 
 class _RifaWidgetState extends State<RifaWidget> {
   @override
+
+  // Future<void> _abrirURL(String telefone) async {
+  //   print('O telefone é: ${telefone}');
+  //   final Uri _url = Uri.parse('https://wa.me/+5569${telefone}');
+  //   print(_url);
+  //
+  //   if (!await launchUrl(_url)) {
+  //     throw 'Não pode inicializar $_url';
+  //   }
+  // }
 
   String? _nome;
   String? _telefone;
@@ -35,6 +58,13 @@ class _RifaWidgetState extends State<RifaWidget> {
   TextEditingController _nomeController = TextEditingController();
   TextEditingController _telefoneController = TextEditingController();
   TextEditingController _enderecoController = TextEditingController();
+
+
+  void _limparControladores(){
+    _nomeController.clear();
+    _telefoneController.clear();
+    _enderecoController.clear();
+  }
 
 
 
@@ -96,36 +126,63 @@ class _RifaWidgetState extends State<RifaWidget> {
     //     ),
     //   ),
     // );
-      final output = await getApplicationDocumentsDirectory();
-      final file = File('${output.path}/rifa-${doc}.pdf');
+      final output = await getExternalStorageDirectory();
+      final file = File('${output?.path}/rifa-${doc}.pdf');
       await file.writeAsBytes(await pdf.save());
-      print(output.path);
+      print(output?.path);
       print('PDF SALVO COM SUCESSO!');
-      enviarWhatsApp(file, output, telefone);
-      print('COMPARTILHADO NO WHATSAPP SUCESSO!');
+      if (output != null) {
+        await OpenFile.open('${output?.path}/rifa-${doc}.pdf');
+      }
+      //await enviarWhatsApp(file, output, telefone);
+      print('PDF ABERTO COM SUCESSO!!');
+    _limparControladores();
 
   }
+  // Future<void> enviarWhatsApp(Share share) async {
+  //   String msg =
+  //       'Flutter share is great!!\n Check out full example at https://pub.dev/packages/flutter_share_me';
+  //   String url = 'https://pub.dev/packages/flutter_share_me';
+  //   String? response;
+  //   final FlutterShareMe flutterShareMe = FlutterShareMe();
+  //   switch (share) {
+  //     case Share.whatsapp_business:
+  //       response = await flutterShareMe.shareToWhatsApp4Biz(
+  //           msg: msg);
+  //       break;
+  //     case Share.whatsapp_personal:
+  //       await _abrirURL(_telefoneController.text);
+  //       break;
+  //
+  //   }
+  //
+  //
+  // }
 
-  Future<void> enviarWhatsApp(File file, Directory output, String telefone) async {
-    Future<void> isInstalled() async {
-      final val = await WhatsappShare.isInstalled(
-          package: Package.whatsapp
-      );
-      print('Whatsapp está instalado: $val');
-      await WhatsappShare.shareFile(
-        phone: telefone,
-        filePath: [file.toString()],
-      );
-    }
+  // Future<void> enviarWhatsApp(File file, Directory output, String telefone) async {
+  //
+  //   Future<void> isInstalled() async {
+  //     final val = await WhatsappShare.isInstalled(
+  //         package: Package.businessWhatsapp
+  //     );
+  //
+  //     print('Whatsapp está instalado: $val');
+  //     await WhatsappShare.shareFile(
+  //       phone: telefone,
+  //       filePath: [file.toString()],
+  //     );
+  //   }
+  //   await isInstalled();
+  //
+  // }
 
-  }
-
-  // Future<void> lerPDF() async {
+  // Future<void> lerPDF(String doc) async {
   //   try {
-  //     final directory = await getApplicationDocumentsDirectory();
-  //     final file = File('${directory.path}/text_file.txt');
+  //     final directory = await getExternalStorageDirectory();
+  //     final file = File('${directory!.path}/rifa-${doc}.pdf');
+  //     print('cosneguiu ler');
   //   } catch (e) {
-  //     print('exception');
+  //     print('não leu');
   //   }
   // }
 
@@ -147,7 +204,22 @@ class _RifaWidgetState extends State<RifaWidget> {
     );
   }
 
+  _launchWhatsapp(String telefone, String comprador) async {
+    var whatsapp_number = "+556${telefone}";
+    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp_number&text=Olá, ${comprador}! Tudo bem?! Vou enviar seu comprovante de compra de rifa! Obrigado por ajudar o IFRO Campus Ariquemes!");
+    if (await canLaunchUrl(whatsappAndroid)) {
+      await launchUrl(whatsappAndroid);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("WhatsApp não está instalado!"),
+        ),
+      );
+    }
+  }
+
   Widget build(BuildContext context) {
+
     return SingleChildScrollView(
       child: SafeArea(
         child: Padding(
@@ -214,20 +286,24 @@ class _RifaWidgetState extends State<RifaWidget> {
                       textStyle: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold)),
+                  onPressed: () async {
+                    _launchWhatsapp(_telefoneController.text, _nomeController.text);
+                    },
+                    icon: Icon(Icons.whatsapp),
+                  label: Text('Abrir contato no WhatsApp')),
+              const SizedBox(height: 20.0),
+              ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      textStyle: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
                   onPressed: (){ _salvarFirebase();},
                   icon: Icon(Icons.sell),
                   label: Text('Gerar Rifa',)),
-              const SizedBox(height: 20.0),
-              // ElevatedButton.icon(
-              //     style: ElevatedButton.styleFrom(
-              //         primary: Colors.green,
-              //         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              //         textStyle: TextStyle(
-              //             fontSize: 22,
-              //             fontWeight: FontWeight.bold)),
-              //     onPressed: () {},
-              //     icon: Icon(Icons.whatsapp),
-              //     label: Text('Enviar WhatsApp')),
+              const SizedBox(height: 40.0),
+              Text('Primeiro envie uma mensagem para o contato e depois gere a Rifa.')
             ],
           ),
         ),

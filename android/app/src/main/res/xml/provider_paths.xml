@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path name="external_files" path="."/>
+    <external-path name="/data/user/0/br.com.quanyx.rifa.rifa_flutter/app_flutter" path="/"/>
+    <external-path name="/app_flutter" path="/"/>
+    <external-path-files name="app_flutter" path="/"/>
+    <external-path-files name="app_flutter" path="."/>
+    <files-path name="app_flutter" path="."/>
+    <files-path name="app_flutter" path="/"/>
+    <cache-path name="app_flutter" path="/"/>
+    <cache-path name="app_flutter" path="."/>
+    <external-media-path name="app_flutter" path="."/>
+    <external-media-path name="app_flutter" path="/"/>
+    <files-path name="/data/user/0/br.com.quanyx.rifa.rifa_flutter/app_flutter" path="/"/>
+    <files-path name="/data/user/0/br.com.quanyx.rifa.rifa_flutter/app_flutter" path="."/>
 </paths>
