@@ -32,8 +32,8 @@ class _RifaWidgetState extends State<RifaWidget> {
   String? _telefone;
   String? _endereco;
 
-  VendedoresMock _vendedoresMock = VendedoresMock.SALA_3A_AGRO;
-  String vendedorFinal = 'SALA_3A_AGRO';
+  VendedoresMock _vendedoresMock = VendedoresMock.Vendedor;
+  String vendedorFinal = 'Vendedor(a)';
 
   TextEditingController _nomeController = TextEditingController();
   TextEditingController _telefoneController = TextEditingController();
@@ -130,7 +130,7 @@ class _RifaWidgetState extends State<RifaWidget> {
   }
 
   _launchWhatsapp(String telefone, String comprador) async {
-    var whatsapp_number = "+556${telefone}";
+    var whatsapp_number = "+55${telefone}";
     var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp_number&text=Olá, ${comprador}! Tudo bem?! Vou enviar seu comprovante de compra de rifa! Obrigado por ajudar o IFRO Campus Ariquemes!");
     if (await canLaunchUrl(whatsappAndroid)) {
       await launchUrl(whatsappAndroid);
@@ -148,12 +148,10 @@ class _RifaWidgetState extends State<RifaWidget> {
     return SingleChildScrollView(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.fromLTRB(32, 15, 32, 32),
           child: Column(
             children: [
               _buildVendorSelector(),
-              const SizedBox(height: 24.0),
-              Divider(),
               TextFormField(
                 controller: _nomeController,
                 textCapitalization: TextCapitalization.words,
@@ -178,8 +176,8 @@ class _RifaWidgetState extends State<RifaWidget> {
                   filled: true,
                   icon: Icon(Icons.phone),
                   hintText: 'Qual o seu número de celular?',
-                  labelText: 'Número de Telefone *',
-                  prefixText: '+55 (69) ',
+                  labelText: 'Número de Telefone - Ex: 69993485858 *',
+                  prefixText: '+55 ',
                 ),
                 keyboardType: TextInputType.phone,
                 onSaved: (String? value) {
@@ -258,8 +256,8 @@ class _RifaWidgetState extends State<RifaWidget> {
     );
     return ListTile(
       contentPadding: const EdgeInsets.all(8),
-      title: const Text('Sala que fez a venda:'),
-      trailing: dropdown,
+      title: const Text('Quem fez a venda:'),
+      subtitle: dropdown,
     );
   }
 }
