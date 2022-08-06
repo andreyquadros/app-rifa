@@ -160,7 +160,7 @@ class _RifaWidgetState extends State<RifaWidget> {
                   filled: true,
                   icon: Icon(Icons.person),
                   hintText: 'Qual o seu nome?',
-                  labelText: 'Nome *',
+                  labelText: 'Nome do Comprador*',
                 ),
                 onSaved: (String? value) {
                   this._nome = value;
