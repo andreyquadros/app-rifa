@@ -7,8 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:rifa_flutter/model/VendedoresMock.dart';
 import 'package:rifa_flutter/model/class/Comprador.dart';
+import 'package:rifa_flutter/model/class/vendedor.dart';
+import 'package:rifa_flutter/services/firebase_services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum Share {
@@ -30,7 +31,8 @@ class _RifaWidgetState extends State<RifaWidget> {
   String? _telefone;
   String? _endereco;
 
-  VendedoresMock _vendedoresMock = VendedoresMock.Vendedor;
+  final List<Vendedor> vendedores = [Vendedor(id: '', nome: 'Vendedor(a)')];
+  final _services = FirebaseServices();
   String vendedorFinal = 'Vendedor(a)';
 
   TextEditingController _nomeController = TextEditingController();
@@ -137,9 +139,17 @@ class _RifaWidgetState extends State<RifaWidget> {
     _limparControladores();
   }
 
+  Future<void> _obterVendedores() async {
+    var vens = await _services.getVendedores();
+    vendedores.addAll(vens);
+    setState(() {});
+  }
+
   @override
   void initState() {
+    super.initState();
     _databaseFB;
+    _obterVendedores();
   }
 
   Future<void> _databaseFB() async {
@@ -268,19 +278,22 @@ class _RifaWidgetState extends State<RifaWidget> {
   }
 
   Widget _buildVendorSelector() {
-    final dropdown = DropdownButton<VendedoresMock>(
-      value: _vendedoresMock,
+    if (vendedores.isEmpty) {
+      // verifique se a lista está vazia antes de usá-la
+      return CircularProgressIndicator(); // retorne um spinner ou algum outro widget
+    }
+    final dropdown = DropdownButton<String>(
+      value: vendedorFinal,
       onChanged: (novoVendedor) {
         vendedorFinal = novoVendedor.toString();
 
-        if (novoVendedor != null)
-          setState(() => _vendedoresMock = novoVendedor);
+        if (novoVendedor != null) setState(() => vendedorFinal = novoVendedor);
       },
       items: [
-        for (final vendedor in VendedoresMock.values)
+        for (final vendedor in vendedores)
           DropdownMenuItem(
-            value: vendedor,
-            child: Text(vendedor.name),
+            value: vendedor.nome,
+            child: Text(vendedor.nome),
           )
       ],
     );
