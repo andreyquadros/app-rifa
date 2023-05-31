@@ -66,6 +66,18 @@ class _RifaWidgetState extends State<RifaWidget> {
     return null;
   }
 
+  String? _validarVendedor(String value) {
+    if (value == 'Vendedor(a)') {
+      const snackBar = SnackBar(
+        content: Text('Por favor preencha o campo Vendedor, ele é obrigatório'),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    return null;
+  }
+
   void _salvarFirebase() async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
     String _nomeC = _nomeController.text;
@@ -182,7 +194,7 @@ class _RifaWidgetState extends State<RifaWidget> {
     return SingleChildScrollView(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(32, 15, 32, 32),
+          padding: const EdgeInsets.fromLTRB(22, 15, 22, 32),
           child: Column(
             children: [
               _buildVendorSelector(),
@@ -261,7 +273,9 @@ class _RifaWidgetState extends State<RifaWidget> {
                           TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                   onPressed: () {
                     _validarNome(_nomeController.text);
-                    if (_nomeController.text.isNotEmpty) _salvarFirebase();
+                    _validarVendedor(vendedorFinal);
+                    if (_nomeController.text.isNotEmpty &&
+                        vendedorFinal != 'Vendedor(a)') _salvarFirebase();
                   },
                   icon: Icon(Icons.sell),
                   label: Text(
@@ -280,7 +294,7 @@ class _RifaWidgetState extends State<RifaWidget> {
   Widget _buildVendorSelector() {
     if (vendedores.isEmpty) {
       // verifique se a lista está vazia antes de usá-la
-      return CircularProgressIndicator(); // retorne um spinner ou algum outro widget
+      return CircularProgressIndicator();
     }
     final dropdown = DropdownButton<String>(
       value: vendedorFinal,
@@ -298,7 +312,7 @@ class _RifaWidgetState extends State<RifaWidget> {
       ],
     );
     return ListTile(
-      contentPadding: const EdgeInsets.all(8),
+      contentPadding: const EdgeInsets.all(0),
       title: const Text('Quem fez a venda:'),
       subtitle: dropdown,
     );
