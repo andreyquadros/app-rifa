@@ -19,6 +19,7 @@ class FirebaseServices {
         nome: vendedor['nome'],
       ));
     }
+    _vendedores.sort((a, b) => a.nome.compareTo(b.nome));
     log(_vendedores.toString());
     return _vendedores;
   }

@@ -123,7 +123,7 @@ class _RifaWidgetState extends State<RifaWidget> {
                   'Nome',
                   'Telefone',
                   'Endereço',
-                  'Qual a sala fez a venda?',
+                  'Qual candidato?',
                   'Hash Identificador'
                 ],
                 [
@@ -313,7 +313,7 @@ class _RifaWidgetState extends State<RifaWidget> {
     );
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
-      title: const Text('Quem fez a venda:'),
+      title: const Text('Selecione o candidato(a) - Rei ou Rainha:'),
       subtitle: dropdown,
     );
   }
